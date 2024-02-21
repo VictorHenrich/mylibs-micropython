@@ -19,6 +19,8 @@ class NetUtils:
 
         cls.__wlan_instance.close()
 
+        cls.__wlan_instance = None
+
     @classmethod
     def wifi_connected(cls):
         if not cls.__wlan_instance:
