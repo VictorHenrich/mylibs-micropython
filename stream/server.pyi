@@ -2,7 +2,7 @@ from typing import Union, Type
 from socket import socket, SocketKind, AddressFamily, AddressInfo, AF_INET, SOCK_STREAM
 from abc import ABC
 
-class AbstractSocketConnection(ABC):
+class AbstractStreamConnection(ABC):
     def __init__(self, socket: socket, address: AddressInfo) -> None: ...
     def on_receive(self, data: bytes) -> None:
         """
@@ -15,17 +15,17 @@ class AbstractSocketConnection(ABC):
             Notification receipt data
         """
 
-class SocketServer(socket):
+class StreamServer(socket):
     def __init__(
         self,
-        socket_connection_class: Type[AbstractSocketConnection],
+        socket_connection_class: Type[AbstractStreamConnection],
         host: str = "localhost",
         port: Union[str, int] = 5000,
         family: AddressFamily = AF_INET,
         type: SocketKind = SOCK_STREAM,
     ) -> None: ...
     def __handle_client_connection(
-        self, client_connection: AbstractSocketConnection
+        self, client_connection: AbstractStreamConnection
     ) -> None: ...
     def __perform_loop(self) -> None: ...
     def start(self) -> None:

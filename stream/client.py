@@ -4,13 +4,13 @@ import _thread as threading
 from patterns.abstract import AbstractClass
 
 
-class SocketClientHandler(AbstractClass):
+class StreamClientHandler(AbstractClass):
     @AbstractClass.abstract_method
     def on_receive(self, data):
         ...
 
 
-class SocketClient(socket):
+class StreamClient(socket):
     def __init__(
         self,
         socket_handler_class,
@@ -30,7 +30,7 @@ class SocketClient(socket):
     def __perform_loop(self):
         data = self.recv(1024)
 
-        socket_handler: SocketClientHandler = self.__socket_handler_class()
+        socket_handler: StreamClientHandler = self.__socket_handler_class()
 
         threading.start_new_thread(socket_handler.on_receive, args=(data,))
 

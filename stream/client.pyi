@@ -3,7 +3,7 @@ from socket import socket, SocketKind, AddressFamily, AF_INET, SOCK_STREAM
 
 from patterns.abstract import AbstractClass
 
-class SocketClientHandler(AbstractClass):
+class StreamClientHandler(AbstractClass):
     @AbstractClass.abstract_method
     def on_receive(self, data: bytes) -> None:
         """
@@ -16,10 +16,10 @@ class SocketClientHandler(AbstractClass):
             Notification receipt data
         """
 
-class SocketClient(socket):
+class StreamClient(socket):
     def __init__(
         self,
-        socket_handler_class: Type[SocketClientHandler],
+        socket_handler_class: Type[StreamClientHandler],
         host: str,
         port: Union[str, int],
         family: AddressFamily = AF_INET,

@@ -4,9 +4,9 @@ import _thread as threading
 from patterns.abstract import AbstractClass
 
 
-class AbstractSocketConnection(AbstractClass):
+class AbstractStreamConnection(AbstractClass):
     def __init__(self, socket, address):
-        super().__init__(AbstractSocketConnection)
+        super().__init__(AbstractStreamConnection)
 
         self.__socket = socket
 
@@ -27,7 +27,7 @@ class AbstractSocketConnection(AbstractClass):
         )
 
 
-class SocketServer(socket):
+class StreamServer(socket):
     def __init__(
         self,
         socket_connection_class,
