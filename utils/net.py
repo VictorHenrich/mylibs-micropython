@@ -24,6 +24,6 @@ class NetUtils:
     @classmethod
     def wifi_connected(cls):
         if not cls.__wlan_instance:
-            return
+            return False
 
         return cls.__wlan_instance.isconnected()
