@@ -2,6 +2,28 @@ from bluetooth import BLE, UUID, FLAG_NOTIFY, FLAG_WRITE
 
 from utils.char import CharUtils
 from patterns.abstract import AbstractClass
+from ble.event_types import BluetoothEventTypes
+
+
+class BluetoothPeripheral:
+    def __init__(self, address_type, address_data, connection_handle):
+        self.__address_type = address_type
+
+        self.__address_data = address_data
+
+        self.__connection_handle = connection_handle
+
+    @property
+    def address_type(self):
+        return self.__address_type
+
+    @property
+    def address_data(self):
+        return self.__address_data
+
+    @property
+    def connection_handle(self):
+        return self.__connection_handle
 
 
 class BluetoothServerParams:
@@ -12,7 +34,7 @@ class BluetoothServerParams:
         uart_receiver,
         transmitter_handler,
         receiver_handler,
-    ) -> None:
+    ):
         self.__ble = ble
 
         self.__uart_transmitter = uart_transmitter
@@ -45,30 +67,47 @@ class BluetoothServerParams:
 
 
 class BluetoothEventHandler(AbstractClass):
-    def __init__(self, event_type: int) -> None:
-        self.__event_type: int = event_type
+    def __init__(self, event_type):
+        self.__event_type = event_type
 
     @property
-    def event_type(self) -> int:
+    def event_type(self):
         return self.__event_type
 
     @AbstractClass.abstract_method
-    def handle(self, server_params: BluetoothServerParams, data) -> None:
+    def handle(self, server, data):
         ...
 
 
 class BluetoothServer:
-    def __init__(self) -> None:
-        self.__listeners: list[BluetoothEventHandler] = []
+    def __init__(self):
+        self.__listeners = []
 
-        self.__server_params = self.__create_and_configure_ble_instance()
+        self.__peripherals = []
 
-    def __handle_events(self, event, data, *args) -> None:
+        self.__props = self.__create_and_configure_ble_instance()
+
+    @property
+    def peripherals(self):
+        return self.__peripherals
+
+    @property
+    def props(self):
+        return self.__props
+
+    def __handle_events(self, event, data, *args):
         for listener in self.__listeners:
-            if event == listener.event_type:
-                listener.handle(self.__server_params, data)
+            if event == BluetoothEventTypes.PERIPHERAL_CONNECT:
+                conn_handle, address_type, address_data = data
 
-                break
+                peripheral = BluetoothPeripheral(
+                    address_type, address_data, conn_handle
+                )
+
+                self.__peripherals.append(peripheral)
+
+            if event == listener.event_type:
+                listener.handle(self.__props, data)
 
     def __create_and_configure_ble_instance(self):
         UART_UUID = UUID(CharUtils.generate_uuid())
@@ -103,31 +142,29 @@ class BluetoothServer:
             transmitter_handler=tx_handler,
         )
 
-    def add_event_handler(self, *handlers: BluetoothEventHandler) -> None:
+    def add_event_handler(self, *handlers):
         for handler in handlers:
             self.__listeners.append(handler)
 
-    def start_scan(self, duration: int = 0) -> None:
-        self.__server_params.ble.gap_scan(2000, 30000, 30000)
+    def start_scan(self, duration=2000, **kwargs):
+        self.__props.ble.gap_scan(duration, **kwargs)
 
-    def stop_scan(self) -> None:
-        self.__server_params.ble.gap_scan(None)
+    def stop_scan(self):
+        self.__props.ble.gap_scan(None)
 
-    def start_advertise(self, interval: int = 100) -> None:
-        self.__server_params.ble.gap_advertise(interval)
+    def start_advertise(self, interval=100, **kwargs):
+        self.__props.ble.gap_advertise(interval, **kwargs)
 
-    def stop_advertise(self) -> None:
-        self.__server_params.ble.gap_advertise(None)
+    def stop_advertise(self):
+        self.__props.ble.gap_advertise(None)
 
-    def add_peripheral(
-        self, address_type: int, address: bytes, connection_handler: memoryview
-    ) -> None:
-        self.__server_params.ble.gap_connect(address_type, address)
+    def add_peripheral(self, peripheral):
+        self.__props.ble.gap_connect(peripheral.address_type, peripheral.address_data)
 
-    def remove_peripheral(self, connection_handler: memoryview) -> None:
-        self.__server_params.ble.gap_disconnect(connection_handler)
+    def remove_peripheral(self, peripheral):
+        self.__props.ble.gap_disconnect(peripheral.connection_handler)
 
-    def send_notification(self, data: str) -> None:
-        self.__server_params.ble.gatts_notify(
-            self.__server_params.transmitter_handler, data.encode("utf-8")
+    def send_notification(self, data):
+        self.__props.ble.gatts_notify(
+            self.__props.transmitter_handler, data.encode("utf-8")
         )
