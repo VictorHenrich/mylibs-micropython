@@ -24,6 +24,9 @@ class AbstractStreamConnectionHandler(AbstractClass):
     def on_receive(self, data):
         ...
 
+    def __repr__(self):
+        return f"{self.__class__.__name__} address={self.__address} />"
+
 
 class StreamServer(socket):
     def __init__(
@@ -54,6 +57,8 @@ class StreamServer(socket):
         client_socket, address = self.accept()
 
         client_connection = self.__socket_connection_class(client_socket, address)
+
+        print(f"Client Connected: {client_connection}")
 
         self.__connections.append(client_connection)
 

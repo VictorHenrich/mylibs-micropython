@@ -1,5 +1,6 @@
 from socket import socket, AF_INET, SOCK_STREAM
 import _thread as threading
+import json
 
 from utils.abstract import AbstractClass
 
@@ -44,3 +45,14 @@ class StreamClient(socket):
 
         while True:
             self.__perform_loop()
+
+    def send_data(self, data):
+        body = data
+
+        if isinstance(data, str):
+            body = data.encode("utf-8")
+
+        if isinstance(data, (dict, list)):
+            body = json.dumps(data).encode("utf-8")
+
+        self.sendall(body)

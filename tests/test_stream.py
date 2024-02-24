@@ -30,8 +30,6 @@ class StreamCase(TestCase):
             StreamCase.StreamClientHandler, host=self.__host, port=self.__port
         )
 
-        message: bytes = "Isso é apenas um teste".encode("utf-8")
-
         stream_client.start()
 
-        stream_client.sendall(message)
+        stream_client.send_data("Enviando dados ao servidor!")

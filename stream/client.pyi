@@ -1,4 +1,4 @@
-from typing import Union, Type
+from typing import Union, Type, Any
 from socket import socket, SocketKind, AddressFamily, AF_INET, SOCK_STREAM
 
 from utils.abstract import AbstractClass
@@ -29,4 +29,14 @@ class StreamClient(socket):
     def start(self) -> None:
         """
         Start socket client
+        """
+    def send_data(self, data: Any) -> None:
+        """
+        Send a message to the server
+
+        Parameters
+        -----------
+
+        data: Any
+            Data to be sent
         """
