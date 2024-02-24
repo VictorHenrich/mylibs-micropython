@@ -1,7 +1,7 @@
 from typing import Tuple, Any
 from bluetooth import BLE, UUID
 
-from patterns.abstract import AbstractClass
+from utils.abstract import AbstractClass
 
 class BluetoothPeripheral:
     def __init__(

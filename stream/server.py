@@ -1,7 +1,7 @@
 from socket import socket, AF_INET, SOCK_STREAM
 import _thread as threading
 
-from patterns.abstract import AbstractClass
+from utils.abstract import AbstractClass
 
 
 class AbstractStreamConnection(AbstractClass):

@@ -1,7 +1,7 @@
 from typing import Union, Type
 from socket import socket, SocketKind, AddressFamily, AF_INET, SOCK_STREAM
 
-from patterns.abstract import AbstractClass
+from utils.abstract import AbstractClass
 
 class StreamClientHandler(AbstractClass):
     @AbstractClass.abstract_method

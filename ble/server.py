@@ -1,7 +1,7 @@
 from bluetooth import BLE, UUID, FLAG_NOTIFY, FLAG_WRITE
 
 from utils.char import CharUtils
-from patterns.abstract import AbstractClass
+from utils.abstract import AbstractClass
 from ble.event_types import BluetoothEventTypes
 
 
