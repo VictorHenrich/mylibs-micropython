@@ -11,7 +11,7 @@ class AbstractClass:
             )
 
     @classmethod
-    def abstract_method(cls):
+    def abstract_method(cls, function):
         def wrapper(*args, **kwargs):
             raise NotImplementedError(cls.default_error_messages["abstract_method"])
 

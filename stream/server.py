@@ -4,9 +4,9 @@ import _thread as threading
 from utils.abstract import AbstractClass
 
 
-class AbstractStreamConnection(AbstractClass):
+class AbstractStreamConnectionHandler(AbstractClass):
     def __init__(self, socket, address):
-        super().__init__(AbstractStreamConnection)
+        super().__init__(AbstractStreamConnectionHandler)
 
         self.__socket = socket
 
@@ -22,9 +22,7 @@ class AbstractStreamConnection(AbstractClass):
 
     @AbstractClass.abstract_method
     def on_receive(self, data):
-        raise NotImplementedError(
-            AbstractClass.default_error_messages["abstract_method"]
-        )
+        ...
 
 
 class StreamServer(socket):
@@ -60,13 +58,15 @@ class StreamServer(socket):
         self.__connections.append(client_connection)
 
         threading.start_new_thread(
-            self.__handle_client_connection, args=(client_connection,)
+            self.__handle_client_connection, (client_connection,)
         )
 
     def start(self):
         self.bind((self.__host, self.__port))
 
         self.listen()
+
+        print(f"Start StreamServer: HOST={self.__host} PORT={self.__port}")
 
         while True:
             self.__perform_loop()

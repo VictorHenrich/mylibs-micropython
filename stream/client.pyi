@@ -3,7 +3,7 @@ from socket import socket, SocketKind, AddressFamily, AF_INET, SOCK_STREAM
 
 from utils.abstract import AbstractClass
 
-class StreamClientHandler(AbstractClass):
+class AbstractStreamClientHandler(AbstractClass):
     @AbstractClass.abstract_method
     def on_receive(self, data: bytes) -> None:
         """
@@ -19,7 +19,7 @@ class StreamClientHandler(AbstractClass):
 class StreamClient(socket):
     def __init__(
         self,
-        socket_handler_class: Type[StreamClientHandler],
+        socket_handler_class: Type[AbstractStreamClientHandler],
         host: str,
         port: Union[str, int],
         family: AddressFamily = AF_INET,
