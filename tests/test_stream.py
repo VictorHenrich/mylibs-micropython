@@ -20,16 +20,18 @@ class StreamCase(TestCase):
 
     def test_server(self) -> None:
         stream_server: StreamServer = StreamServer(
-            StreamCase.StreamConnectionHandler, host=self.__host, port=self.__port
+            StreamCase.StreamConnectionHandler, host="0.0.0.0", port=self.__port
         )
 
         stream_server.start()
 
     def test_client(self) -> None:
         stream_client: StreamClient = StreamClient(
-            StreamCase.StreamClientHandler, host=self.__host, port=self.__port
+            StreamCase.StreamClientHandler, host="192.168.16.101", port=self.__port
         )
 
         stream_client.start()
 
         stream_client.send_data("Enviando dados ao servidor!")
+
+        input()

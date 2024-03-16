@@ -32,19 +32,19 @@ class StreamClient(socket):
         self.__port = port
 
     def __perform_loop(self):
-        data = self.recv(1024)
+        while True:
+            data = self.recv(1024)
 
-        socket_handler = self.__socket_handler_class()
+            socket_handler = self.__socket_handler_class()
 
-        threading.start_new_thread(socket_handler.on_receive, args=(data,))
+            threading.start_new_thread(socket_handler.on_receive, args=(data,))
 
     def start(self):
         self.connect((self.__host, self.__port))
 
         print(f"Start StreamClient: HOST={self.__host} PORT={self.__port}")
 
-        while True:
-            self.__perform_loop()
+        threading.start_new_thread(self.__perform_loop, ())
 
     def send_data(self, data):
         body = data
