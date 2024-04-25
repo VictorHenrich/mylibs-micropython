@@ -37,7 +37,7 @@ class StreamClient(socket):
 
             socket_handler = self.__socket_handler_class()
 
-            threading.start_new_thread(socket_handler.on_receive, args=(data,))
+            threading.start_new_thread(socket_handler.on_receive, (data,))
 
     def start(self):
         self.connect((self.__host, self.__port))
