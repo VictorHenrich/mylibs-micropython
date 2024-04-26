@@ -9,12 +9,7 @@ from stream.client import StreamClient, AbstractStreamClientHandler
 
 class CustomCase(TestCase):
     class StreamConnectionHandler(AbstractStreamConnectionHandler):
-        __MAPPERS: Mapping[str, Any] = {
-            "led_red": 17,
-            "led_blue": 18,
-            "led_yellow": 19,
-            "led_green": 20,
-        }
+        __MAPPERS: Mapping[str, Any] = {"led_red": 23, "led_blue": 22, "led_yellow": 21}
 
         __WIT_IA_URL: str = "https://api.wit.ai"
 

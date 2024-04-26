@@ -1,9 +1,6 @@
-from typing import Optional
-import network
+from typing import Mapping, Any
 
 class NetUtils:
-    __wlan_instance: Optional[network.WLAN] = None
-
     @classmethod
     def connect_wifi(cls, network_name: str, network_password: str) -> None:
         """
@@ -27,4 +24,9 @@ class NetUtils:
     def wifi_connected(cls) -> bool:
         """
         Check if wifi is connected
+        """
+    @classmethod
+    def get_config(cls) -> Mapping[str, Any]:
+        """
+        Capture network information
         """

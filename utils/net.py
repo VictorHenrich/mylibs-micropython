@@ -27,3 +27,17 @@ class NetUtils:
             return False
 
         return cls.__wlan_instance.isconnected()
+
+    @classmethod
+    def get_config(cls):
+        if cls.__wlan_instance is None:
+            return
+
+        ip, subnet_mask, gateway, dns_server = cls.__wlan_instance.ifconfig()
+
+        return {
+            "ip": ip,
+            "subnet_mask": subnet_mask,
+            "gateway": gateway,
+            "dns_server": dns_server,
+        }
