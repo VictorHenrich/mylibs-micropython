@@ -7,15 +7,6 @@ import speech_recognition as speech
 from stream.client import StreamClient, AbstractStreamClientHandler
 
 
-HOST: str = "192.168.15.105"
-
-PORT: int = 5000
-
-WIT_TOKEN: str = "IAL5B7YCCKLCAINBRUV75RUN3DAZCR4J"
-
-OPENAI_TOKEN: str = "sk-proj-aq6MXfCylk4dy75P7FPqT3BlbkFJZGa8Shfd3Po3kWyM0aWh"
-
-
 class StreamClientHandler(AbstractStreamClientHandler):
     def on_receive(self, data: bytes) -> None:
         print(f"\nCLIENT HANDLER DATA: {data}")
@@ -54,13 +45,13 @@ class BoardControlService:
         if entities_data and entities_data.get("mode:mode"):
             mode_data = entities_data["mode:mode"][0]
 
-        pin_value: int = int(pin_data["value"])
+        pin_id: int = int(pin_data["value"])
 
-        connect_value: bool = connect_data["value"].lower() == "connect"
+        pin_value: bool = connect_data["value"].lower() == "connect"
 
-        mode_value: str = "in" if not mode_data else mode_data["value"]
+        pin_mode: str = "in" if not mode_data else mode_data["value"]
 
-        return {"pin": pin_value, "connect": connect_value, "mode": mode_value}
+        return {"id": pin_id, "value": pin_value, "mode": pin_mode}
 
     def __integrate_wit(self, text: str) -> Mapping[str, Any]:
         url: str = f"{BoardControlService.__WIT_IA_URL}/message"
@@ -134,11 +125,3 @@ class BoardControlService:
                 command_data: Mapping[str, Any] = self.__integrate_wit(text)
 
                 self.__stream_client.send_data(command_data)
-
-
-if __name__ == "__main__":
-    board_control_service: BoardControlService = BoardControlService(
-        host=HOST, port=PORT, wit_token=WIT_TOKEN
-    )
-
-    board_control_service.execute()
